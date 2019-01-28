@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+declare var deferredPrompt;
 
 @Component({
   selector: 'app-root',
@@ -8,29 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent {
   title = 'Medical';
-  deferredPrompt:any;
 
   constructor() {
-    window.addEventListener('beforeinstallprompt',  (e) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      this.deferredPrompt = e;
-    
-      this.suggestInstallation();
-    
-    });
+   
   }
 
   suggestInstallation(){
     debugger;
-    if(this.deferredPrompt !== undefined) {
+    if(deferredPrompt !== undefined) {
       // The user has had a postive interaction with our app and Chrome
       // has tried to prompt previously, so let's show the prompt.
-      this.deferredPrompt.prompt();
+      deferredPrompt.prompt();
 
       // Follow what the user has done with the prompt.
-      this.deferredPrompt.userChoice.then(function(choiceResult) {
+      deferredPrompt.userChoice.then(function(choiceResult) {
 
         console.log(choiceResult.outcome);
 
@@ -42,7 +34,7 @@ export class AppComponent {
         }
 
         // We no longer need the prompt.  Clear it up.
-        this.deferredPrompt = null;
+        deferredPrompt = null;
       });
     }
   }
